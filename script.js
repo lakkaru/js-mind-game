@@ -45,6 +45,7 @@ createGrid();
 // Getting clicked image names  from image array to selectedImages
 let selectedImages = [];
 let selectedCards = [];
+let score = 0;
 function flipCard() {
   const cardId = this.getAttribute("id");
   this.setAttribute("src", imageArray[cardId].image);
@@ -72,6 +73,9 @@ function flipCard() {
         //initializing selected arrays
         selectedImages.length = 0;
         selectedCards.length = 0;
+        // Increase score by 100/6
+        score += Math.round(100 / 6);
+        document.querySelector("#score").innerHTML = "<span>Your score is " + score +"</span>";
       }, 500);
     } else {
       setTimeout(function () {
@@ -79,7 +83,13 @@ function flipCard() {
           let selectedCard = document.getElementById(cardId);
           selectedCard.setAttribute("src", "images/question.jpeg");
           selectedCard.addEventListener("click", flipCard);
+          
         });
+        // Decrease score by 2
+        if (score!=0) {
+            score += -2;
+          }
+        document.querySelector("#score").innerHTML = "<span>Your score is " + score +"</span>";
         //initializing selected arrays
         selectedImages.length = 0;
         selectedCards.length = 0;
@@ -88,7 +98,5 @@ function flipCard() {
   }
 }
 
-
-// Increase score by 100/6
 // Else wait One second and assign question mark image again
 // Enable click event on cards
