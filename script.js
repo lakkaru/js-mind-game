@@ -15,56 +15,44 @@ const imageArray = [
   { name: "mouse", image: "images/mouse.png" },
   { name: "owl", image: "images/owl.png" },
 ];
-console.log(imageArray);
 
-//Getting grid
-const grid = document.querySelector("#grid");
-
+//Getting number of correctly selected cells
+let correctlySelected = 0;
+let selectedImages = [];
+let selectedCards = [];
+let score = 0;
 // Shuffling images
 imageArray.sort(() => 0.5 - Math.random());
-// console.log(imageArray);
 
 // Creating grid cards for images in imageArray
-// Populating the cards with question image
-// Adding click event listnert to card
 function createGrid() {
   imageArray.forEach((image, index) => {
     let card = document.createElement("img");
-    card.setAttribute("src", "images/question.jpeg");
+    card.setAttribute("src", "images/question.jpeg"); // Populating the cards with question image
     card.setAttribute("id", index); //what is data-id?
     card.setAttribute("class", "image");
-    card.addEventListener("click", flipCard);
+    card.addEventListener("click", flipCard); // Adding click event listnert to card
     grid.appendChild(card);
   });
 }
 createGrid();
 
-// Getting clicked card id
-// Assigning image to the card from image array
-// Disable click event on selected card
-// Getting clicked image names  from image array to selectedImages
-let selectedImages = [];
-let selectedCards = [];
-let score = 0;
 function flipCard() {
-  const cardId = this.getAttribute("id");
-  this.setAttribute("src", imageArray[cardId].image);
-  this.removeEventListener("click", flipCard);
+  const cardId = this.getAttribute("id"); // Getting clicked card id
+  this.setAttribute("src", imageArray[cardId].image); // Assigning image to the card from image array
+  this.removeEventListener("click", flipCard); // Disable click event on selected card
   selectedImages.push(imageArray[cardId].name);
-  selectedCards.push(cardId);
-  //   console.log(selectedImages);
-  console.log(selectedCards);
+  selectedCards.push(cardId); // Getting clicked image names  from image array to selectedImages
+  //  console.log(selectedCards);
 
-  // Compairing images when two images clicked
-  if (selectedImages.length == 2) {
-    // why use ===
+  // Compairing images when two images are clicked
+  if (selectedImages.length == 2) {    // why use ===
     let image1 = selectedImages[0];
     let image2 = selectedImages[1];
     // If images are matched, assign tick image to both cards
-    //Disable clicking
+
     if (image1 == image2) {
-      //   console.log("matched");
-      // .5 second delay
+      // .5 second delay for image memorizing
       setTimeout(function () {
         selectedCards.forEach((cardId) => {
           let selectedCard = document.getElementById(cardId);
@@ -75,21 +63,29 @@ function flipCard() {
         selectedCards.length = 0;
         // Increase score by 100/6
         score += Math.round(100 / 6);
-        document.querySelector("#score").innerHTML = "<span>Your score is " + score +"</span>";
+        document.querySelector("#score").innerHTML =
+          "Your score is " + score + ".";
+        correctlySelected += 2;
+        // console.log(correctlySelected);
+
+        if (correctlySelected == 12) {
+          document.getElementById("play_again").style.display = "block";
+        }
       }, 500);
     } else {
+      // Else wait 0.5 second and assign question mark image again
       setTimeout(function () {
         selectedCards.forEach((cardId) => {
           let selectedCard = document.getElementById(cardId);
           selectedCard.setAttribute("src", "images/question.jpeg");
-          selectedCard.addEventListener("click", flipCard);
-          
+          selectedCard.addEventListener("click", flipCard); // Enable click event on cards
         });
         // Decrease score by 2
-        if (score!=0) {
-            score += -2;
-          }
-        document.querySelector("#score").innerHTML = "<span>Your score is " + score +"</span>";
+        if (score != 0) {
+          score += -2;
+        }
+        document.querySelector("#score").innerHTML =
+          "<span>Your score is " + score + "</span>";
         //initializing selected arrays
         selectedImages.length = 0;
         selectedCards.length = 0;
@@ -98,5 +94,7 @@ function flipCard() {
   }
 }
 
-// Else wait One second and assign question mark image again
-// Enable click event on cards
+// Reloading the page
+function reload() {
+    location.reload();
+}
